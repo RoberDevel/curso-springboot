@@ -12,4 +12,10 @@ public class GreetingServiceImpl implements IGreetingService {
         return greeting;
     }
 
+    @Override
+    public String sayHelloError(String person, String message) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sayHelloError'");
+    }
+
 }
