@@ -42,7 +42,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		// list();
 		// findOne();
 		// create();
-		// update();
+		update();
 		// delete();
 		// personalizedQueries();
 		// personalizedQueries2();
@@ -50,7 +50,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		// personalizedQueriesConcatUpperLowerCase();
 		// queriesFunctionAggregation();
 		// subQueries();
-		whereIn();
+		// whereIn();
 	}
 
 	// anotacion para cuando solo se va a leer la tabla
@@ -100,7 +100,6 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		Long id = scanner.nextLong();
 		scanner.nextLine();
 		Optional<Person> optionalPerson = personRepository.findById(id);
-		Person person = personRepository.encontrarUno(id).get();
 
 		while (!optionalPerson.isPresent()) {
 			System.out.println("Ingrese un id existente de la persona a modificar: ");
@@ -109,17 +108,30 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 			System.out.println("obteniendo persona con id: " + id);
 			optionalPerson = personRepository.findById(id);
 		}
+		Person person = personRepository.encontrarUno(id).get();
 		person = optionalPerson.get();
 		System.out.println(person);
 		System.out.println("Ingrese el nombre: ");
 		String name = scanner.nextLine();
-		if (name.isBlank()) {
-			scanner.close();
-			return;
+
+		if (!name.isBlank()) {
+			person.setName(name);
 		}
-		person.setName(name);
-		personRepository.save(person);
-		System.out.println("aqui: " + person);
+		System.out.println("Ingrese el apellido: ");
+		String lastname = scanner.nextLine();
+		if (!lastname.isBlank()) {
+			person.setLastname(lastname);
+		}
+		System.out.println("Ingrese el lenguaje de programación: ");
+		String programmingLanguage = scanner.nextLine();
+		if (!programmingLanguage.isBlank()) {
+			person.setProgrammingLanguage(programmingLanguage);
+		}
+		if (!name.isBlank() || !lastname.isBlank() || !programmingLanguage.isBlank()) {
+			personRepository.save(person);
+		}
+		personRepository.encontrarUno(id).ifPresent(System.out::println);
+
 		scanner.close();
 	}
 

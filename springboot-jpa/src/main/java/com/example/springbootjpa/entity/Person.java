@@ -1,5 +1,6 @@
 package com.example.springbootjpa.entity;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String lastname;
+    private String programmingLanguage;
+
+    @Embedded
+    private Audit audit = new Audit();
 
     public Person(String name, String lastname, String programmingLanguage) {
         this.name = name;
@@ -25,10 +35,4 @@ public class Person {
         this.lastname = lastname;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String lastname;
-    private String programmingLanguage;
 }
