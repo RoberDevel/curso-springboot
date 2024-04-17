@@ -10,12 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = { "client" })
+@ToString(exclude = { "client" })
 public class Invoice {
 
     @Id
@@ -32,11 +34,6 @@ public class Invoice {
     public Invoice(String description, Long total) {
         this.description = description;
         this.total = total;
-    }
-
-    @Override
-    public String toString() {
-        return "Invoice [id=" + id + ", description=" + description + ", total=" + total + "]";
     }
 
 }

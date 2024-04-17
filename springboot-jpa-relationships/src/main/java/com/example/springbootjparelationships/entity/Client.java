@@ -7,12 +7,14 @@ import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.*;
@@ -23,7 +25,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = { "invoices" })
-// @ToString(exclude = { "invoices" })
 public class Client {
 
     @Id
@@ -45,6 +46,9 @@ public class Client {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "client")
     private Set<Invoice> invoices = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "client")
+    private DetailsClient detailsClient;
+
     public Client(String name, String lastname) {
         this.name = name;
         this.lastname = lastname;
@@ -59,6 +63,18 @@ public class Client {
     public void removeInvoice(Invoice invoice) {
         invoices.remove(invoice);
         invoice.setClient(null);
+
+    }
+
+    public void addClientDetail(DetailsClient detailsClient) {
+
+        this.detailsClient = detailsClient;
+        detailsClient.setClient(this);
+    }
+
+    public void removeClientDetail(DetailsClient detailsClient) {
+        detailsClient.setClient(null);
+        this.detailsClient = null;
 
     }
 

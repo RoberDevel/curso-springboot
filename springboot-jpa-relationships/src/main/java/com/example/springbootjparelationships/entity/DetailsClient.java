@@ -4,30 +4,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+@ToString(exclude = { "client" })
+public class DetailsClient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Boolean vip;
+    private Integer points;
 
-    private String street;
-    private Integer number;
+    @OneToOne
+    @JoinColumn(name = "id_details_client")
+    private Client client;
 
-    public Address(String street, Integer number) {
-        this.street = street;
-        this.number = number;
+    public DetailsClient(Boolean vip, Integer points) {
+        this.vip = vip;
+        this.points = points;
     }
 
 }

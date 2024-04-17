@@ -19,7 +19,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query("select c from Client c left join fetch c.addresses where c.id = ?1")
     Optional<Client> findOneWithAddresses(Long id);
 
-    @Query("select c from Client c left join fetch c.invoices left join fetch c.addresses where c.id = ?1")
+    @Query("select c from Client c left join fetch c.invoices left join fetch c.addresses left join fetch c.detailsClient where c.id = ?1")
     Optional<Client> findOne(Long id);
 
 }

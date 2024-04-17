@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springbootjparelationships.entity.Address;
 import com.example.springbootjparelationships.entity.Client;
+import com.example.springbootjparelationships.entity.DetailsClient;
 import com.example.springbootjparelationships.entity.Invoice;
 import com.example.springbootjparelationships.repository.ClientRepository;
+import com.example.springbootjparelationships.repository.DetailsClientRepository;
 import com.example.springbootjparelationships.repository.InvoiceRepository;
 
 @SpringBootApplication
@@ -27,6 +29,9 @@ public class SpringbootJpaRelationshipsApplication implements CommandLineRunner 
 
 	@Autowired
 	private InvoiceRepository invoiceRepository;
+
+	@Autowired
+	private DetailsClientRepository detailsClientRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootJpaRelationshipsApplication.class, args);
@@ -43,7 +48,66 @@ public class SpringbootJpaRelationshipsApplication implements CommandLineRunner 
 		// oneToManyBidireccional();
 		// oneToManyInvoiceBidireccionalFindById();
 		// removeInvoiceBidireccionalFindById();
-		removeInvoiceBidireccional();
+		// removeInvoiceBidireccional();
+		// oneToOne();
+		// oneToOneFindById();
+		// oneToOneBidireccional();
+		oneToOneBidireccionalFindById();
+	}
+
+	@Transactional
+	public void oneToOneBidireccionalFindById() {
+
+		Optional<Client> optionalClient = clientRepository.findOne(1L);
+
+		optionalClient.ifPresent(client -> {
+			DetailsClient detailsClient = new DetailsClient(true, 1000);
+			client.addClientDetail(detailsClient);
+			clientRepository.save(client);
+
+			System.out.println(client);
+		});
+
+	}
+
+	@Transactional
+	public void oneToOneBidireccional() {
+		DetailsClient detailsClient = new DetailsClient(true, 1000);
+		Client client = new Client("Lucas", "Alvarez");
+
+		client.addClientDetail(detailsClient);
+		clientRepository.save(client);
+
+		System.out.println(client);
+	}
+
+	@Transactional
+	public void oneToOneFindById() {
+
+		DetailsClient detailsClient = new DetailsClient(true, 1000);
+		detailsClientRepository.save(detailsClient);
+
+		Optional<Client> client = clientRepository.findOne(1L);
+		client.ifPresent(c -> {
+			c.setDetailsClient(detailsClient);
+			clientRepository.save(c);
+			System.out.println(c);
+
+		});
+
+	}
+
+	@Transactional
+	public void oneToOne() {
+
+		DetailsClient detailsClient = new DetailsClient(true, 1000);
+		detailsClientRepository.save(detailsClient);
+
+		Client client = new Client("Lucas", "Alvarez");
+		client.setDetailsClient(detailsClient);
+		clientRepository.save(client);
+
+		System.out.println(client);
 	}
 
 	@Transactional
