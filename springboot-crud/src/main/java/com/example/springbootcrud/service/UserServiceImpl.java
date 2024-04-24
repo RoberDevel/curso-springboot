@@ -38,8 +38,6 @@ public class UserServiceImpl implements IUserService {
 
         Optional<Rol> optionalRolUser = rolRepository.findByName("ROLE_USER");
 
-        System.out.println("optionalRolUser------------------------>: " + optionalRolUser.get().getName());
-
         List<Rol> roles = new ArrayList<>();
 
         optionalRolUser.ifPresent(roles::add);
