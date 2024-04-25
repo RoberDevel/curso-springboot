@@ -39,10 +39,10 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		 * personRepository.saveAll(personsCreate);
 		 */
 
-		// list();
+		list();
 		// findOne();
 		// create();
-		update();
+		// update();
 		// delete();
 		// personalizedQueries();
 		// personalizedQueries2();

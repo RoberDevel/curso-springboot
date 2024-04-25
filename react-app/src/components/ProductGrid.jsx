@@ -5,7 +5,7 @@ export const ProductGrid = ({ handlerProductSelected, handlerRemove, products })
 
     return (
 
-        <table class="table table-striped table-hover table-bordered">
+        <table className="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
                     <th>id</th>
