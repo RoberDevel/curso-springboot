@@ -1,0 +1,43 @@
+<form (ngSubmit)="onSubmit()" #productForm="ngForm">
+
+    <div>
+        <input type="text" class="form-control my-2" placeholder="nombre" name="name" [(ngModel)]="product.name"
+            #name="ngModel" required minlength="4">
+        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+
+            <div *ngIf="name.errors!['required']">Nombre requerido</div>
+
+
+            <div *ngIf="name.errors!['minlength']">El nombre debe tener al menos 4 caracteres</div>
+
+
+        </div>
+    </div>
+    <div>
+        <input type="text" class="form-control my-2" placeholder="descripcion" name="description"
+            [(ngModel)]="product.description" #description="ngModel" required>
+        <div *ngIf="description.invalid && (description.dirty || description.touched)" class="alert alert-danger">
+            @if (description.errors!['required']) { <div>Descripción requerida</div>}
+
+        </div>
+    </div>
+    <div>
+        <input type="number" class="form-control my-2" placeholder="precio" name="price" [(ngModel)]="product.price"
+            #price="ngModel" required min="50">
+        <div *ngIf="price.invalid && (price.dirty || price.touched)" class="alert alert-danger">
+            @if (price.errors!['required']) {
+            <div>Precio requerido</div>
+            }
+            @if (price.errors!['min']){
+            <div>El precio debe ser mayor a 50</div>
+            }
+
+        </div>
+    </div>
+    <div>
+        <button [disabled]="!productForm.form.valid" type="submit"
+            class="btn btn-primary my-2">{{product.id>0?'Modificar':'Crear'}}</button>
+        <button type="button" class="btn btn-secondary my-2 mx-2" (click)="clean()">Limpiar</button>
+    </div>
+
+</form>
