@@ -25,23 +25,41 @@ export class ProductComponent implements OnInit {
 
     if (product.id > 0) {
 
-      this.products = this.products.map(p => {
-        if (p.id == product.id) {
-          return { ...product };
-        }
-        return p;
+      this.service.update(product).subscribe(updatedProduct => {
+        this.products = this.products.map(p => {
+          if (p.id == product.id) {
+            return { ...updatedProduct };
+          }
+          return p;
+        });
       });
+
+      /* this.products = this.products.map(p => {
+         if (p.id == product.id) {
+           return { ...product };
+         }
+         return p;
+       });*/
 
     } else {
       //product.id = this.products.length + 1;
       // this.products.push(product);
-      this.products = [...this.products, { ...product, id: this.products.length + 1 }];
+      this.service.create(product).subscribe(newProduct => {
+        // this.products.push({ ...newProduct });
+        this.products = [...this.products, { ...newProduct }];
+
+      });
+      //this.products = [...this.products, { ...product, id: this.products.length + 1 }];
     }
     this.productSelected = new Product();
   }
 
   onRemoveProduct(id: number): void {
-    this.products = this.products.filter(product => product.id != id);
+    this.service.remove(id).subscribe(() => {
+      this.products = this.products.filter(product => product.id != id);
+    });
+
+    // this.products = this.products.filter(product => product.id != id);
   }
 
   onUpdateProduct(productRow: Product): void {
