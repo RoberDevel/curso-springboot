@@ -1,14 +1,17 @@
 package com.example.data_jpa_vintage.controller;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,31 +20,53 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.data_jpa_vintage.model.Cliente;
 import com.example.data_jpa_vintage.paginator.PageRender;
 import com.example.data_jpa_vintage.service.IClienteService;
+import com.example.data_jpa_vintage.service.IUploadFileService;
 
 import jakarta.validation.Valid;
 
 @Controller
+@SessionAttributes("cliente")
 public class ClienteController {
 
     @Autowired
     private IClienteService clienteService;
 
+    @Autowired
+    private IUploadFileService uploadFileService;
+
+    @GetMapping("/uploads/{filename:.+}")
+    public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
+        Resource recurso = null;
+        try {
+            recurso = uploadFileService.load(filename);
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"")
+                .body(recurso);
+    }
+
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Map<String, Object> model, RedirectAttributes flash) {
 
-        Cliente cliente = clienteService.findOne(id);
+        // Cliente cliente = clienteService.findOne(id);
+        Cliente cliente = clienteService.fetchByIdWithFacturas(id);
 
         if (cliente == null) {
             flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
             return "redirect:/listar";
         }
-        System.out.println(cliente.toString());
+
         model.put("cliente", cliente);
         model.put("titulo", "Detalle cliente: " + cliente.getName());
         return "ver";
@@ -102,24 +127,26 @@ public class ClienteController {
 
         if (!foto.isEmpty()) {
 
-            String roothString = "C://Users//roberto.bravo//Desktop//proy//curso-springboot//almacen";
+            if (cliente.getId() != null
+                    && cliente.getId() > 0
+                    && cliente.getPhoto() != null
+                    && cliente.getPhoto().length() > 0) {
+
+                uploadFileService.delete(cliente.getPhoto());
+
+            }
+            String uniqueFilename = null;
             try {
-                byte[] bytes = foto.getBytes();
-                Path rutaCompleta = Paths.get(roothString + "//" + foto.getOriginalFilename());
-                Files.write(rutaCompleta, bytes);
-                flash.addFlashAttribute("info", "Has subido correctamente '" + foto.getOriginalFilename() + "'");
-                cliente.setPhoto(foto.getOriginalFilename());
+                uniqueFilename = uploadFileService.copy(foto);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-
-                flash.addFlashAttribute("error", "Hubo un problema subiendo '" + foto.getOriginalFilename() + "'");
                 e.printStackTrace();
             }
+            flash.addFlashAttribute("info", "Has subido correctamente '" + uniqueFilename + "'");
+            cliente.setPhoto(uniqueFilename);
         }
 
         String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito" : "Cliente creado con éxito";
-
-        System.out.println(cliente.toString());
 
         clienteService.guardar(cliente);
         flash.addFlashAttribute("success", mensajeFlash);
@@ -129,9 +156,14 @@ public class ClienteController {
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes flash) {
         if (id > 0) {
-
+            Cliente cliente = clienteService.findOne(id);
             clienteService.delete(id);
             flash.addFlashAttribute("success", "Cliente eliminado con éxito");
+
+            if (uploadFileService.delete(cliente.getPhoto())) {
+                flash.addFlashAttribute("info", "Foto " + cliente.getPhoto() + " eliminada con éxito");
+            }
+
         }
         return "redirect:/listar";
     }

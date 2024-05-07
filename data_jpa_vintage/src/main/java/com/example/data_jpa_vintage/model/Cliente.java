@@ -1,14 +1,19 @@
 package com.example.data_jpa_vintage.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
@@ -47,6 +52,18 @@ public class Cliente implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date createAt;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    private List<Factura> facturas = new ArrayList<>();
+
     private String photo;
+
+    public void addFactura(Factura factura) {
+        facturas.add(factura);
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + surname;
+    }
 
 }
