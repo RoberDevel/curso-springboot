@@ -19,6 +19,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,11 @@ public class Factura implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 189L;
+
+    @XmlTransient
+    public Cliente getCliente() {
+        return cliente;
+    }
 
     @PrePersist
     public void prePersist() {
