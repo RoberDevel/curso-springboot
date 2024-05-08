@@ -40,9 +40,11 @@ public class FacturaPdfView extends AbstractPdfView {
         // FacturaController.java
         Factura factura = (Factura) model.get("factura");
 
-        Locale locale = localeResolver.resolveLocale(request);
-
+        // Forma 1
         MessageSourceAccessor message = getMessageSourceAccessor();
+        // Forma 2
+        Locale locale = localeResolver.resolveLocale(request);
+        // messageSource.getMessage("text.factura.ver.datos.factura", null, locale)
 
         PdfPTable tabla = new PdfPTable(1);
         tabla.setSpacingAfter(20);
@@ -82,7 +84,7 @@ public class FacturaPdfView extends AbstractPdfView {
             tabla3.addCell(item.calcularImporte().toString());
         });
 
-        cell = new PdfPCell(new Phrase("Total: "));
+        cell = new PdfPCell(new Phrase(message.getMessage("text.factura.form.total")));
         cell.setColspan(3);
         cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
         tabla3.addCell(cell);
