@@ -2,6 +2,8 @@ package com.example.data_jpa_vintage.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class ItemFactura implements Serializable {
     private Integer cantidad;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
 
     public Double calcularImporte() {
