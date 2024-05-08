@@ -77,7 +77,7 @@ public class ClienteController {
         return "ver";
     }
 
-    @GetMapping("/listar")
+    @GetMapping(value = { "/listar", "/" })
     public String listar(Model model, @RequestParam(name = "page", defaultValue = "0") int page, Locale locale) {
 
         Page<Cliente> clientes = clienteService.findAll(PageRequest.of(page, 5));
