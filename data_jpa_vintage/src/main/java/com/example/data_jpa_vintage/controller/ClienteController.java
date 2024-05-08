@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.Map;
 
-import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;

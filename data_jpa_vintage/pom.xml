@@ -60,6 +60,14 @@
 			<artifactId>lombok</artifactId>
 			<scope>annotationProcessor</scope>
 		</dependency>
+		
+		<!-- pdf seccion 39-->
+		<!-- https://github.com/LibrePDF/OpenPDF -->
+<dependency>
+  <groupId>com.github.librepdf</groupId>
+  <artifactId>openpdf</artifactId>
+  <version>1.0.5</version>
+</dependency>
 	</dependencies>
 
 	<build>
