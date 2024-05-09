@@ -1,5 +1,6 @@
 package com.example.data_jpa_vintage.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Cliente implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id

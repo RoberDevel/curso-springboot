@@ -37,8 +37,13 @@ public class ClienteServiceImpl implements IClienteService {
     }
 
     @Override
-    public Page<Cliente> findAll(Pageable page) {
+    public Page<Cliente> findAllPage(Pageable page) {
         return clienteRepository.findAll(page);
+    }
+
+    @Override
+    public List<Cliente> findAll() {
+        return clienteRepository.findAll();
     }
 
     @Override

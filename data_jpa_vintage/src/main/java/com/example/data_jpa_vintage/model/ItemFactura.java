@@ -1,5 +1,6 @@
 package com.example.data_jpa_vintage.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemFactura implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 11L;
 
     @Id

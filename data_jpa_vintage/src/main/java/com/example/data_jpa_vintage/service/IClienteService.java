@@ -12,7 +12,9 @@ import com.example.data_jpa_vintage.model.Producto;
 public interface IClienteService {
     public void guardar(Cliente cliente);
 
-    public Page<Cliente> findAll(Pageable page);
+    public Page<Cliente> findAllPage(Pageable page);
+
+    public List<Cliente> findAll();
 
     public Cliente findOne(Long id);
 

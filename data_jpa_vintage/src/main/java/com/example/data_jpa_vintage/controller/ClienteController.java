@@ -2,6 +2,7 @@ package com.example.data_jpa_vintage.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -29,6 +31,7 @@ import com.example.data_jpa_vintage.model.Cliente;
 import com.example.data_jpa_vintage.paginator.PageRender;
 import com.example.data_jpa_vintage.service.IClienteService;
 import com.example.data_jpa_vintage.service.IUploadFileService;
+import com.example.data_jpa_vintage.view.xml.ClienteList;
 
 import jakarta.validation.Valid;
 
@@ -80,13 +83,18 @@ public class ClienteController {
     @GetMapping(value = { "/listar", "/" })
     public String listar(Model model, @RequestParam(name = "page", defaultValue = "0") int page, Locale locale) {
 
-        Page<Cliente> clientes = clienteService.findAll(PageRequest.of(page, 5));
+        Page<Cliente> clientes = clienteService.findAllPage(PageRequest.of(page, 5));
         PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
         model.addAttribute("titulo", messageSource.getMessage("text.cliente.listar.titulo", null, locale));
         model.addAttribute("clientes", clientes);
         model.addAttribute("page", pageRender);
         return "listar";
 
+    }
+
+    @GetMapping("/listar-rest")
+    public @ResponseBody ClienteList listarRest() {
+        return new ClienteList(clienteService.findAll());
     }
 
     @RequestMapping(value = "/form")
